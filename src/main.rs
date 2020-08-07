@@ -8,7 +8,8 @@ use nannou::image::imageops::{FilterType};
 use crate::grid::Grid;
 
 struct Model {
-    sprite_sheet: DynamicImage
+    sprite_sheet: DynamicImage,
+    player_location: Point2
 }
 
 fn main() {
@@ -21,7 +22,10 @@ fn model(app: &App) -> Model {
     app.new_window().size(WINDOW_RES as u32, WINDOW_RES as u32).view(view).build().unwrap();
     let img_path = app.assets_path().unwrap().join("spritesheet.png");
     let image = open(img_path).unwrap();
-    Model { sprite_sheet: { image } }
+    Model {
+        sprite_sheet: { image },
+        player_location: Point2::new(4.0, 4.0)
+    }
 }
 
 fn event(_app: &App, _model: &mut Model, _event: Event) {
@@ -32,11 +36,17 @@ fn new_sprite(x: u32, y: u32, sprite_sheet: &DynamicImage) -> DynamicImage {
     .resize( (SPRITE_RES * ZOOM) as u32, (SPRITE_RES * ZOOM) as u32, FilterType::Nearest)
 }
 
+fn update_grid(grid: &mut Grid, sprite: DynamicImage, location: Point2) {
+    grid[location.x as usize][location.y as usize] = sprite
+}
+
 fn view(app: &App, model: &Model, frame: Frame) {
     frame.clear(BLACK);
 
-    let sprite1= new_sprite(4, 16, &model.sprite_sheet);
+    let background= new_sprite(4, 16, &model.sprite_sheet);
+    let player = new_sprite(6, 2, &model.sprite_sheet);
 
-    let grid = Grid::new(sprite1);
+    let mut grid = Grid::new(background);
+    update_grid(&mut grid, player, model.player_location);
     grid.draw(app, &frame);
 }

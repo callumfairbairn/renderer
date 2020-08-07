@@ -1,6 +1,7 @@
 use crate::constants::{WINDOW_RES, SPRITE_RES, ZOOM};
 use nannou::prelude::*;
 use nannou::image::{DynamicImage};
+use std::ops::{Index, IndexMut};
 
 pub(crate) struct Grid(Vec<Vec<DynamicImage>>);
 
@@ -20,5 +21,26 @@ impl Grid {
                 draw.to_frame(app, frame).unwrap();
             }
         }
+    }
+
+    // pub fn update(&mut self, sprite: DynamicImage, location: Point2) {
+    //     mem::replace(&mut self[location.x as usize][location.y as usize], &sprite)
+    // }
+}
+
+
+
+impl Index<usize> for Grid {
+    type Output = Vec<DynamicImage>;
+    fn index(&self, index: usize) -> &Vec<DynamicImage> {
+        let Grid(vec) = self;
+        &vec[index]
+    }
+}
+
+impl IndexMut<usize> for Grid {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        let Grid(vec) = self;
+        &mut vec[index]
     }
 }
