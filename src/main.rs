@@ -28,9 +28,16 @@ fn event(_app: &App, _model: &mut Model, _event: Event) {
 fn view(app: &App, model: &Model, frame: Frame) {
     frame.clear(BLACK);
 
-    let draw = app.draw();
     let sprite = model.sprite_sheet.crop_imm((2.0 * SPRITE_RES) as u32, (2.0 * SPRITE_RES) as u32, SPRITE_RES as u32, SPRITE_RES as u32).resize( (SPRITE_RES * 2.0) as u32, (SPRITE_RES * 2.0) as u32, FilterType::Nearest);
-    draw.texture(&wgpu::Texture::from_image(app, &sprite));
+    let sprite2 = model.sprite_sheet.crop_imm((3.0 * SPRITE_RES) as u32, (3.0 * SPRITE_RES) as u32, SPRITE_RES as u32, SPRITE_RES as u32).resize( (SPRITE_RES * 2.0) as u32, (SPRITE_RES * 2.0) as u32, FilterType::Nearest);
 
-    draw.to_frame(app, &frame).unwrap();
+    // let draw = app.draw();
+    let draw1 = Draw::new();
+    draw1.texture(&wgpu::Texture::from_image(app, &sprite)).x_y(-WINDOW_RES/2.0 + SPRITE_RES, WINDOW_RES/2.0 - SPRITE_RES);
+
+    let draw2 = Draw::new();
+    draw2.texture(&wgpu::Texture::from_image(app, &sprite2)).x_y(-WINDOW_RES/2.0 + 3.0 * SPRITE_RES, WINDOW_RES/2.0 - SPRITE_RES);
+
+    draw1.to_frame(app, &frame).unwrap();
+    draw2.to_frame(app, &frame).unwrap();
 }
