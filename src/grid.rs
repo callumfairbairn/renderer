@@ -23,9 +23,9 @@ impl Grid {
         }
     }
 
-    // pub fn update(&mut self, sprite: DynamicImage, location: Point2) {
-    //     mem::replace(&mut self[location.x as usize][location.y as usize], &sprite)
-    // }
+    pub fn update(&mut self, sprite: DynamicImage, location: Point2) {
+        self[location.x as usize][location.y as usize] = sprite
+    }
 }
 
 

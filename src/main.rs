@@ -36,10 +36,6 @@ fn new_sprite(x: u32, y: u32, sprite_sheet: &DynamicImage) -> DynamicImage {
     .resize( (SPRITE_RES * ZOOM) as u32, (SPRITE_RES * ZOOM) as u32, FilterType::Nearest)
 }
 
-fn update_grid(grid: &mut Grid, sprite: DynamicImage, location: Point2) {
-    grid[location.x as usize][location.y as usize] = sprite
-}
-
 fn view(app: &App, model: &Model, frame: Frame) {
     frame.clear(BLACK);
 
@@ -47,6 +43,6 @@ fn view(app: &App, model: &Model, frame: Frame) {
     let player = new_sprite(6, 2, &model.sprite_sheet);
 
     let mut grid = Grid::new(background);
-    update_grid(&mut grid, player, model.player_location);
+    grid.update(player, model.player_location);
     grid.draw(app, &frame);
 }
