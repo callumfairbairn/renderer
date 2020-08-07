@@ -6,9 +6,9 @@ use std::ops::{Index, IndexMut};
 pub(crate) struct Grid(Vec<Vec<DynamicImage>>);
 
 impl Grid {
-    pub fn new(default_sprite: DynamicImage) -> Grid {
+    pub fn new(default_sprite: &DynamicImage) -> Grid {
         let sprites_per_row = (WINDOW_RES / (SPRITE_RES * ZOOM)) as usize;
-        Grid(vec![vec![default_sprite; sprites_per_row]; sprites_per_row])
+        Grid(vec![vec![default_sprite.clone(); sprites_per_row]; sprites_per_row])
     }
 
     pub fn draw(&self, app: &App, frame: &Frame) {
@@ -23,8 +23,8 @@ impl Grid {
         }
     }
 
-    pub fn update(&mut self, sprite: DynamicImage, location: Point2) {
-        self[location.x as usize][location.y as usize] = sprite
+    pub fn update(&mut self, sprite: &DynamicImage, location: Point2) {
+        self[location.x as usize][location.y as usize] = sprite.clone()
     }
 }
 
