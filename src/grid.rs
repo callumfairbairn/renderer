@@ -23,8 +23,10 @@ impl Grid {
         }
     }
 
-    pub fn update(&mut self, sprite: &DynamicImage, location: Point2) {
-        self[location.x as usize][location.y as usize] = sprite.clone()
+    pub fn update(background_sprite: &DynamicImage, sprite: &DynamicImage, location: Point2) -> Grid {
+        let mut grid = Grid::new(&background_sprite);
+        grid[location.x as usize][location.y as usize] = sprite.clone();
+        grid
     }
 }
 
