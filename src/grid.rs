@@ -23,10 +23,15 @@ impl Grid {
         }
     }
 
+    pub fn draw_sprite(&self, app: &App, frame: &Frame, sprite: &DynamicImage, location: &Point2) {
+        let draw = Draw::new();
+        draw.texture(&wgpu::Texture::from_image(app, sprite))
+            .x_y(-WINDOW_RES/2.0 + ((location.x + 0.5 ) * SPRITE_RES * ZOOM), WINDOW_RES/2.0 - ((location.y + 0.5) * SPRITE_RES * ZOOM) );
+        draw.to_frame(app, frame).unwrap();
+    }
+
     pub fn update(background_sprite: &DynamicImage, sprite: &DynamicImage, location: Point2) -> Grid {
-        let mut grid = Grid::new(&background_sprite);
-        grid[location.x as usize][location.y as usize] = sprite.clone();
-        grid
+        Grid::new(&background_sprite)
     }
 }
 

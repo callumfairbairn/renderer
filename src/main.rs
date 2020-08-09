@@ -97,4 +97,5 @@ fn view(app: &App, model: &Model, frame: Frame) {
     frame.clear(BLACK);
 
     model.grid.draw(app, &frame);
+    model.grid.draw_sprite(app, &frame, &model.player_sprite, &model.player_location)
 }
