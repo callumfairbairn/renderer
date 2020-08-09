@@ -11,27 +11,24 @@ impl Grid {
         Grid(vec![vec![default_sprite.clone(); sprites_per_row]; sprites_per_row])
     }
 
-    pub fn draw(&self, app: &App, frame: &Frame) {
+    pub fn draw_background(&self, app: &App, frame: &Frame, sprite: &DynamicImage) {
+        let draw = app.draw();
+        let texture = wgpu::Texture::from_image(app, sprite);
         let Grid(vec) = self;
         for (x, row) in vec.iter().enumerate() {
-            for (y, sprite) in row.iter().enumerate() {
-                let draw = Draw::new();
-                draw.texture(&wgpu::Texture::from_image(app, &sprite))
+            for (y, _) in row.iter().enumerate() {
+                draw.texture(&texture)
                     .x_y(-WINDOW_RES/2.0 + ((x as f32 + 0.5 ) * SPRITE_RES * ZOOM), WINDOW_RES/2.0 - ((y as f32 + 0.5) * SPRITE_RES * ZOOM) );
-                draw.to_frame(app, frame).unwrap();
             }
         }
-    }
-
-    pub fn draw_sprite(&self, app: &App, frame: &Frame, sprite: &DynamicImage, location: &Point2) {
-        let draw = Draw::new();
-        draw.texture(&wgpu::Texture::from_image(app, sprite))
-            .x_y(-WINDOW_RES/2.0 + ((location.x + 0.5 ) * SPRITE_RES * ZOOM), WINDOW_RES/2.0 - ((location.y + 0.5) * SPRITE_RES * ZOOM) );
         draw.to_frame(app, frame).unwrap();
     }
 
-    pub fn update(background_sprite: &DynamicImage, sprite: &DynamicImage, location: Point2) -> Grid {
-        Grid::new(&background_sprite)
+    pub fn draw_sprite(&self, app: &App, frame: &Frame, sprite: &DynamicImage, location: &Point2) {
+        let draw = app.draw();
+        draw.texture(&wgpu::Texture::from_image(app, sprite))
+            .x_y(-WINDOW_RES/2.0 + ((location.x + 0.5 ) * SPRITE_RES * ZOOM), WINDOW_RES/2.0 - ((location.y + 0.5) * SPRITE_RES * ZOOM) );
+        draw.to_frame(app, frame).unwrap();
     }
 }
 
