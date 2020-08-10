@@ -31,7 +31,8 @@ fn model(app: &App) -> Model {
     app.new_window().size(WINDOW_RES as u32, WINDOW_RES as u32).event(event).view(view).build().unwrap();
 
     let sprite_sheet: DynamicImage = open(app.assets_path().unwrap().join("spritesheet.png")).unwrap();
-    let grid = Grid::new(sprite_sheet.clone());
+    let mut grid = Grid::new(sprite_sheet.clone());
+    grid.add_sprite(Sprite::new(IPoint2{x: 11, y: 17}, Point2::new(5.0, 4.0), sprite_sheet.clone()));
 
     Model {
         player_sprite: Sprite::new(IPoint2{x: 4, y: 4}, Point2::new(4.0, 4.0), sprite_sheet.clone()),
@@ -41,7 +42,7 @@ fn model(app: &App) -> Model {
             s: false,
             a: false,
             d: false,
-    },
+        },
     }
 }
 

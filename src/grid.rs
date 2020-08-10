@@ -2,7 +2,7 @@ use crate::constants::{WINDOW_RES, SPRITE_RES, ZOOM, DEFAULT_BACKGROUND_COORD};
 use nannou::prelude::*;
 use nannou::image::{DynamicImage};
 use std::ops::{Index, IndexMut};
-use crate::sprite::Sprite;
+use crate::sprite::{Sprite, IPoint2};
 
 pub(crate) struct Grid(Vec<Vec<Sprite>>);
 
@@ -21,16 +21,40 @@ impl Grid {
     }
 
     pub fn draw_background(&self, app: &App, frame: &Frame) {
-        let draw = app.draw();
-        let texture = wgpu::Texture::from_image(app, &self[0][0].image);
+        let sprite_sheet_coords = self.unique_sprite_sheet_coords_in_grid();
         let Grid(vec) = self;
-        for (x, row) in vec.iter().enumerate() {
-            for (y, _) in row.iter().enumerate() {
-                draw.texture(&texture)
-                    .x_y(-WINDOW_RES/2.0 + ((x as f32 + 0.5 ) * SPRITE_RES * ZOOM), WINDOW_RES/2.0 - ((y as f32 + 0.5) * SPRITE_RES * ZOOM) );
+
+        for sprite_sheet_coord in sprite_sheet_coords {
+            let mut sprites_with_coord = vec![];
+            for row in vec {
+                for sprite in row {
+                    if sprite_sheet_coord == sprite.sprite_sheet_coord {
+                        sprites_with_coord.push(sprite.clone());
+                    }
+                }
+            }
+            Sprite::draw_sprites(sprites_with_coord, app, frame);
+        }
+    }
+
+    fn unique_sprite_sheet_coords_in_grid(&self) -> Vec<IPoint2> {
+        //ssc = sprite sheet coord
+        let mut sscs = vec![];
+        let Grid(vec) = self;
+        for row in vec {
+            for sprite in row {
+                let ssc = &sprite.sprite_sheet_coord;
+                if !sscs.contains(ssc) {
+                    sscs.push(ssc.clone());
+                }
             }
         }
-        draw.to_frame(app, frame).unwrap();
+        sscs
+    }
+
+    // Replaces sprite in grid that has the same location as the one provided
+    pub fn add_sprite(&mut self, sprite: Sprite) {
+        self[sprite.location.x as usize][sprite.location.y as usize] = sprite.clone();
     }
 }
 
