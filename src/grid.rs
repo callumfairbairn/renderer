@@ -1,26 +1,28 @@
 use crate::constants::{WINDOW_RES, SPRITE_RES, ZOOM, DEFAULT_BACKGROUND_COORD};
 use nannou::prelude::*;
-use nannou::image::{DynamicImage};
 use std::ops::{Index, IndexMut};
 use crate::sprite::{Sprite, IPoint2};
+use crate::{TileInfo};
+use std::collections::HashMap;
+use nannou::wgpu::Texture;
 
 pub(crate) struct Grid(Vec<Vec<Sprite>>);
 
 impl Grid {
-    pub fn new(sprite_sheet: DynamicImage, app: &App) -> Grid {
+    pub fn new(tile_info: &mut TileInfo, app: &App) -> Grid {
         let sprites_per_row = (WINDOW_RES / (SPRITE_RES * ZOOM)) as usize;
         let mut grid = Vec::new();
         for x in 0..sprites_per_row {
             let mut row = Vec::new();
             for y in 0..sprites_per_row {
-                row.push(Sprite::new(DEFAULT_BACKGROUND_COORD, Point2::new(x as f32, y as f32), sprite_sheet.clone(), app))
+                row.push(Sprite::new(DEFAULT_BACKGROUND_COORD, Point2::new(x as f32, y as f32), tile_info, app))
             }
             grid.push(row);
         }
         Grid(grid)
     }
 
-    pub fn draw_background(&self, app: &App, frame: &Frame) {
+    pub fn draw_background(&self, app: &App, frame: &Frame, coord_texture_map: &HashMap<IPoint2, Texture>) {
         let sprite_sheet_coords = self.unique_sprite_sheet_coords_in_grid();
         let Grid(vec) = self;
 
@@ -33,7 +35,7 @@ impl Grid {
                     }
                 }
             }
-            Sprite::draw_sprites(sprites_with_coord, app, frame);
+            Sprite::draw_sprites(sprites_with_coord, app, frame, coord_texture_map);
         }
     }
 
