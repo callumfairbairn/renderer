@@ -1,11 +1,12 @@
+mod sprite;
 mod grid;
 mod constants;
 
 use nannou::prelude::*;
-use crate::constants::{WINDOW_RES, SPRITE_RES, ZOOM};
+use crate::constants::{WINDOW_RES};
 use nannou::image::{DynamicImage, open};
-use nannou::image::imageops::{FilterType};
 use crate::grid::Grid;
+use crate::sprite::{Sprite, IPoint2};
 
 struct KeyDownStatus {
     w: bool,
@@ -15,9 +16,7 @@ struct KeyDownStatus {
 }
 
 struct Model {
-    background_sprite: DynamicImage,
-    player_sprite: DynamicImage,
-    player_location: Point2,
+    player_sprite: Sprite,
     grid: Grid,
     key_down_status: KeyDownStatus
 }
@@ -30,16 +29,12 @@ fn main() {
 
 fn model(app: &App) -> Model {
     app.new_window().size(WINDOW_RES as u32, WINDOW_RES as u32).event(event).view(view).build().unwrap();
-    let img_path = app.assets_path().unwrap().join("spritesheet.png");
-    let sprite_sheet = open(img_path).unwrap();
 
-    let background_sprite = new_sprite(4, 16, &sprite_sheet);
-    let grid = Grid::new(&background_sprite);
+    let sprite_sheet: DynamicImage = open(app.assets_path().unwrap().join("spritesheet.png")).unwrap();
+    let grid = Grid::new(sprite_sheet.clone());
 
     Model {
-        background_sprite,
-        player_sprite: new_sprite(6, 2, &sprite_sheet),
-        player_location: Point2::new(4.0, 4.0),
+        player_sprite: Sprite::new(IPoint2{x: 4, y: 4}, Point2::new(4.0, 4.0), sprite_sheet.clone()),
         grid,
         key_down_status: KeyDownStatus {
             w: false,
@@ -52,16 +47,16 @@ fn model(app: &App) -> Model {
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
     if model.key_down_status.w {
-        if model.player_location.y > 0.0 { model.player_location.y = model.player_location.y - 1.0 }
+        if model.player_sprite.location.y > 0.0 { model.player_sprite.location.y = model.player_sprite.location.y - 1.0 }
     }
     if model.key_down_status.s {
-        if model.player_location.y < model.grid[0].len() as f32 - 1.0 { model.player_location.y = model.player_location.y + 1.0 }
+        if model.player_sprite.location.y < model.grid[0].len() as f32 - 1.0 { model.player_sprite.location.y = model.player_sprite.location.y + 1.0 }
     }
     if model.key_down_status.a {
-        if model.player_location.x > 0.0 { model.player_location.x = model.player_location.x - 1.0 }
+        if model.player_sprite.location.x > 0.0 { model.player_sprite.location.x = model.player_sprite.location.x - 1.0 }
     }
     if model.key_down_status.d {
-        if model.player_location.x < model.grid[0].len() as f32 - 1.0 { model.player_location.x = model.player_location.x + 1.0  }
+        if model.player_sprite.location.x < model.grid[0].len() as f32 - 1.0 { model.player_sprite.location.x = model.player_sprite.location.x + 1.0  }
     }
 }
 
@@ -87,14 +82,11 @@ fn update_key_down_status(key: Key, model: &mut Model, key_down: bool) {
     }
 }
 
-fn new_sprite(x: u32, y: u32, sprite_sheet: &DynamicImage) -> DynamicImage {
-    sprite_sheet.crop_imm(x * SPRITE_RES as u32, y * SPRITE_RES as u32, SPRITE_RES as u32, SPRITE_RES as u32)
-    .resize( (SPRITE_RES * ZOOM) as u32, (SPRITE_RES * ZOOM) as u32, FilterType::Nearest)
-}
+
 
 fn view(app: &App, model: &Model, frame: Frame) {
     frame.clear(BLACK);
 
-    model.grid.draw_background(app, &frame, &model.background_sprite);
-    model.grid.draw_sprite(app, &frame, &model.player_sprite, &model.player_location)
+    model.grid.draw_background(app, &frame);
+    model.player_sprite.draw_sprite(app, &frame)
 }
