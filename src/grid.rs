@@ -7,13 +7,13 @@ use crate::sprite::{Sprite, IPoint2};
 pub(crate) struct Grid(Vec<Vec<Sprite>>);
 
 impl Grid {
-    pub fn new(sprite_sheet: DynamicImage) -> Grid {
+    pub fn new(sprite_sheet: DynamicImage, app: &App) -> Grid {
         let sprites_per_row = (WINDOW_RES / (SPRITE_RES * ZOOM)) as usize;
         let mut grid = Vec::new();
         for x in 0..sprites_per_row {
             let mut row = Vec::new();
             for y in 0..sprites_per_row {
-                row.push(Sprite::new(DEFAULT_BACKGROUND_COORD, Point2::new(x as f32, y as f32), sprite_sheet.clone()))
+                row.push(Sprite::new(DEFAULT_BACKGROUND_COORD, Point2::new(x as f32, y as f32), sprite_sheet.clone(), app))
             }
             grid.push(row);
         }
@@ -25,7 +25,6 @@ impl Grid {
         let Grid(vec) = self;
 
         for sprite_sheet_coord in sprite_sheet_coords {
-            println!("Drawing a sprite");
             let mut sprites_with_coord = vec![];
             for row in vec {
                 for sprite in row {
