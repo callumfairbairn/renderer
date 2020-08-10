@@ -25,6 +25,7 @@ impl Grid {
         let Grid(vec) = self;
 
         for sprite_sheet_coord in sprite_sheet_coords {
+            println!("Drawing a sprite");
             let mut sprites_with_coord = vec![];
             for row in vec {
                 for sprite in row {
@@ -53,8 +54,14 @@ impl Grid {
     }
 
     // Replaces sprite in grid that has the same location as the one provided
-    pub fn add_sprite(&mut self, sprite: Sprite) {
+    pub fn _add_sprite(&mut self, sprite: Sprite) {
         self[sprite.location.x as usize][sprite.location.y as usize] = sprite.clone();
+    }
+
+    pub fn add_sprites(&mut self, sprites: Vec<Sprite>) {
+        for sprite in sprites {
+            self[sprite.location.x as usize][sprite.location.y as usize] = sprite.clone();
+        }
     }
 }
 
