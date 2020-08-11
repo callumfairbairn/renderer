@@ -5,7 +5,7 @@ mod grid;
 mod constants;
 
 use nannou::prelude::*;
-use crate::constants::{WINDOW_RES};
+use crate::constants::{WINDOW_RES, DEFAULT_BACKGROUND_COORD};
 use nannou::image::{DynamicImage, open};
 use nannou::wgpu::Texture;
 use crate::grid::Grid;
@@ -38,7 +38,7 @@ fn model(app: &App) -> Model {
     let tile_sheet = open(app.assets_path().unwrap().join("tilesheet.png")).unwrap();
     let coord_texture_map = HashMap::new();
     let mut tile_info = TileInfo{ tile_sheet, coord_texture_map };
-    let mut grid = Grid::new(&mut tile_info, app);
+    let mut grid = Grid::new(DEFAULT_BACKGROUND_COORD, &mut tile_info, app);
 
     let mut additional_background_tiles = vec![];
     additional_background_tiles.push(Tile::new(IPoint2{x: 8, y: 15}, Point2::new(0.0, 0.0), &mut tile_info, app));

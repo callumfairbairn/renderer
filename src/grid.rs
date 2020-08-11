@@ -1,4 +1,4 @@
-use crate::constants::{WINDOW_RES, TILE_RES, ZOOM, DEFAULT_BACKGROUND_COORD};
+use crate::constants::{WINDOW_RES, TILE_RES, ZOOM};
 use nannou::prelude::*;
 use std::ops::{Index, IndexMut};
 use crate::tile::{Tile, IPoint2};
@@ -9,13 +9,13 @@ use nannou::wgpu::Texture;
 pub(crate) struct Grid(Vec<Vec<Tile>>);
 
 impl Grid {
-    pub fn new(tile_info: &mut TileInfo, app: &App) -> Grid {
+    pub fn new(tile_coord: IPoint2, tile_info: &mut TileInfo, app: &App) -> Grid {
         let tiles_per_row = (WINDOW_RES / (TILE_RES * ZOOM)) as usize;
         let mut grid = Vec::new();
         for x in 0..tiles_per_row {
             let mut row = Vec::new();
             for y in 0..tiles_per_row {
-                row.push(Tile::new(DEFAULT_BACKGROUND_COORD, Point2::new(x as f32, y as f32), tile_info, app))
+                row.push(Tile::new(tile_coord, Point2::new(x as f32, y as f32), tile_info, app))
             }
             grid.push(row);
         }
