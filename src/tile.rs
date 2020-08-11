@@ -26,7 +26,8 @@ pub struct Tile {
 
 impl Tile {
     pub fn new(tile_coord: IPoint2, game_location: Point2, tile_info: &mut TileInfo, app: &App) -> Tile {
-        add_texture_to_map_if_needed(tile_coord, tile_info, app);
+        // The first time we load a texture, add it to coord_texture_map so that we only have to load it once, as this is an expensive operation
+        add_texture_to_map_if_needed(tile_coord, tile_info, app); // If we have already loaded a texture, this function does nothing
         return Tile {
             tile_coord: tile_coord.clone(),
             location: game_location
