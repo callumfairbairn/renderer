@@ -13,6 +13,6 @@ pub fn update(_app: &App, model: &mut Model, _update: Update) {
         if model.player.location.x > 0.0 { model.player.location.x = model.player.location.x - 1.0 }
     }
     if model.key_down_status.d {
-        if model.player.location.x < model.grid[0].len() as f32 - 1.0 { model.player.location.x = model.player.location.x + 1.0  }
+        if model.player.location.x < model.grid.len() as f32 - 1.0 { model.player.location.x = model.player.location.x + 1.0  }
     }
 }

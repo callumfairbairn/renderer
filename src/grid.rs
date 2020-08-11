@@ -1,4 +1,4 @@
-use crate::constants::{WINDOW_RES, TILE_RES, ZOOM};
+use crate::constants::{TILE_RES, ZOOM, WINDOW_RES_X, WINDOW_RES_Y};
 use nannou::prelude::*;
 use std::ops::{Index, IndexMut};
 use crate::tile::{Tile, IPoint2};
@@ -10,16 +10,22 @@ pub(crate) struct Grid(Vec<Vec<Tile>>);
 
 impl Grid {
     pub fn new(tile_coord: IPoint2, tile_info: &mut TileInfo, app: &App) -> Grid {
-        let tiles_per_row = (WINDOW_RES / (TILE_RES * ZOOM)) as usize;
+        let tiles_per_row = (WINDOW_RES_X / (TILE_RES * ZOOM)) as usize;
+        let tiles_per_column = (WINDOW_RES_Y / (TILE_RES * ZOOM)) as usize;
         let mut grid = Vec::new();
         for x in 0..tiles_per_row {
             let mut row = Vec::new();
-            for y in 0..tiles_per_row {
+            for y in 0..tiles_per_column {
                 row.push(Tile::new(tile_coord, Point2::new(x as f32, y as f32), tile_info, app))
             }
             grid.push(row);
         }
         Grid(grid)
+    }
+
+    pub fn len(&self) -> usize {
+        let Grid(vec) = self;
+        vec.len()
     }
 
     pub fn draw_background(&self, app: &App, frame: &Frame, coord_texture_map: &HashMap<IPoint2, Texture>) {
