@@ -5,9 +5,10 @@ use nannou::prelude::{Point2, wgpu};
 use nannou::{App, Frame};
 use nannou::wgpu::Texture;
 use std::collections::HashMap;
+use serde::Deserialize;
 use crate::{TileInfo};
 
-#[derive(Eq, Ord, PartialOrd, PartialEq, Clone, Hash, Copy)]
+#[derive(Eq, Ord, PartialOrd, PartialEq, Clone, Hash, Copy, Deserialize, Debug)]
 pub struct IPoint2 {
     pub x: i32,
     pub y: i32

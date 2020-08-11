@@ -1,3 +1,4 @@
+mod level;
 mod update;
 mod event;
 mod tile;
@@ -13,6 +14,7 @@ use crate::tile::{Tile, IPoint2};
 use crate::event::{event, KeyDownStatus};
 use crate::update::update;
 use std::collections::HashMap;
+use crate::level::read_level_from_file;
 
 pub struct TileInfo {
     coord_texture_map: HashMap<IPoint2, Texture>,
@@ -38,27 +40,8 @@ fn model(app: &App) -> Model {
     let tile_sheet = open(app.assets_path().unwrap().join("tilesheet.png")).unwrap();
     let coord_texture_map = HashMap::new();
     let mut tile_info = TileInfo{ tile_sheet, coord_texture_map };
-    let mut grid = Grid::new(IPoint2{ x: 8, y: 16 }, &mut tile_info, app);
-
-    let mut additional_background_tiles = vec![];
-    additional_background_tiles.push(Tile::new(IPoint2{x: 9, y: 16}, Point2::new(0.0, 0.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 9, y: 16}, Point2::new(2.0, 1.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 9, y: 16}, Point2::new(7.0, 4.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 10, y: 16}, Point2::new(6.0, 6.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 10, y: 16}, Point2::new(12.0, 9.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 10, y: 16}, Point2::new(0.0, 4.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 11, y: 16}, Point2::new(3.0, 9.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 11, y: 16}, Point2::new(10.0, 5.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 11, y: 16}, Point2::new(9.0, 7.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 11, y: 16}, Point2::new(2.0, 2.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 12, y: 16}, Point2::new(1.0, 4.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 12, y: 16}, Point2::new(3.0, 5.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 12, y: 16}, Point2::new(8.0, 8.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 12, y: 16}, Point2::new(11.0, 2.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 13, y: 16}, Point2::new(12.0, 4.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 13, y: 16}, Point2::new(6.0, 0.0), &mut tile_info, app));
-    additional_background_tiles.push(Tile::new(IPoint2{x: 14, y: 16}, Point2::new(7.0, 2.0), &mut tile_info, app));
-    grid.add_tiles(additional_background_tiles);
+    let level = read_level_from_file("levels/lvl1.json").ok().unwrap();
+    let grid = Grid::new_from_level(level, &mut tile_info, app);
 
     Model {
         player: Tile::new(IPoint2{x: 4, y: 4}, Point2::new(4.0, 4.0), &mut tile_info, app),
