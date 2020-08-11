@@ -6,7 +6,11 @@ use nannou::{App, Frame};
 use nannou::wgpu::Texture;
 use std::collections::HashMap;
 use serde::Deserialize;
-use crate::{TileInfo};
+
+pub struct TileInfo {
+    pub coord_texture_map: HashMap<IPoint2, Texture>,
+    pub tile_sheet: DynamicImage
+}
 
 #[derive(Eq, Ord, PartialOrd, PartialEq, Clone, Hash, Copy, Deserialize, Debug)]
 pub struct IPoint2 {

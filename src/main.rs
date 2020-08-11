@@ -10,16 +10,11 @@ use crate::constants::{WINDOW_RES_X, WINDOW_RES_Y};
 use nannou::image::{DynamicImage, open};
 use nannou::wgpu::Texture;
 use crate::grid::Grid;
-use crate::tile::{Tile, IPoint2};
+use crate::tile::{Tile, IPoint2, TileInfo};
 use crate::event::{event, KeyDownStatus};
 use crate::update::update;
 use std::collections::HashMap;
 use crate::level::read_level_from_file;
-
-pub struct TileInfo {
-    coord_texture_map: HashMap<IPoint2, Texture>,
-    tile_sheet: DynamicImage
-}
 
 pub struct Model {
     player: Tile,
