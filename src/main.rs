@@ -7,8 +7,7 @@ mod constants;
 
 use nannou::prelude::*;
 use crate::constants::{WINDOW_RES_X, WINDOW_RES_Y};
-use nannou::image::{DynamicImage, open};
-use nannou::wgpu::Texture;
+use nannou::image::open;
 use crate::grid::Grid;
 use crate::tile::{Tile, IPoint2, TileInfo};
 use crate::event::{event, KeyDownStatus};
