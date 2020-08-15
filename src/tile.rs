@@ -1,4 +1,4 @@
-use crate::constants::{TILE_RES, ZOOM, WINDOW_RES_X, WINDOW_RES_Y};
+use crate::constants::{TILE_RES, ZOOM, WINDOW_RES_X, WINDOW_RES_Y, GAP_BETWEEN_TILES};
 use nannou::image::imageops::{FilterType};
 use nannou::image::{DynamicImage};
 use nannou::prelude::{Point2, wgpu};
@@ -55,7 +55,7 @@ impl Tile {
 fn new_texture_from_coord(coord: IPoint2, tile_sheet: &DynamicImage, app: &App) -> Texture {
     wgpu::Texture::from_image(
         app,
-        &tile_sheet.crop_imm(coord.x as u32 * TILE_RES as u32, coord.y as u32 * TILE_RES as u32, TILE_RES as u32, TILE_RES as u32)
+        &tile_sheet.crop_imm(coord.x as u32 * (TILE_RES as u32 + GAP_BETWEEN_TILES), coord.y as u32 * (TILE_RES as u32 + GAP_BETWEEN_TILES), TILE_RES as u32, TILE_RES as u32)
             .resize( (TILE_RES * ZOOM) as u32, (TILE_RES * ZOOM) as u32, FilterType::Nearest)
     )
 }

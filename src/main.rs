@@ -35,10 +35,11 @@ fn model(app: &App) -> Model {
     let coord_texture_map = HashMap::new();
     let mut tile_info = TileInfo{ tile_sheet, coord_texture_map };
     let level = read_level_from_file("levels/lvl1.json").ok().unwrap();
-    let grid = Grid::new_from_level(level, &mut tile_info, app);
+    // let grid = Grid::new_from_level(level, &mut tile_info, app);
+    let grid = Grid::_new_from_tile(IPoint2{x: 5, y: 0}, &mut tile_info, app);
 
     Model {
-        player: Tile::new(IPoint2{x: 4, y: 4}, Point2::new(4.0, 4.0), &mut tile_info, app),
+        player: Tile::new(IPoint2{x: 25, y: 7}, Point2::new(4.0, 4.0), &mut tile_info, app),
         grid,
         key_down_status: KeyDownStatus::new(),
         tile_info
